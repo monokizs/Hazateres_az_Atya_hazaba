@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hazatérés az Atya házába</title>
+<style>
+:root{color-scheme:dark;--bg:#0d0b09;--card:#1a1612;--gold:#d4a84b;--gold2:#f3d98b;--tx:#efe6d2;--mut:#9a8e78;--ok:#6fcf8e;--bad:#e86a5c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 50% 0,#2a2010,var(--bg) 60%);color:var(--tx);font:16px/1.5 Georgia,'Times New Roman',serif;min-height:100vh}
+.w{max-width:720px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.6rem;text-align:center;color:var(--gold2);margin:8px 0 2px}
+.sub{text-align:center;color:var(--mut);margin:0 0 16px}
+.bar{height:10px;background:#2b241b;border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#a67c1f,var(--gold2));transition:width .6s}
+.lbl{display:flex;justify-content:space-between;color:var(--mut);font-size:.8rem;margin:6px 0 16px}
+.st{background:var(--card);border:1px solid #3a2f1e;border-radius:14px;padding:18px;margin-bottom:14px;position:relative}
+.st.lock{opacity:.45;pointer-events:none}
+.st.lock::after{content:"🔒";position:absolute;right:16px;top:12px;font-size:1.3rem}
+.st.done{border-color:var(--ok)}
+.st h2{margin:0 0 4px;font-size:1.15rem;color:var(--gold)}
+.st p{margin:6px 0 12px;color:var(--tx)}
+button{font:inherit;cursor:pointer;background:#2a2217;color:var(--tx);border:1px solid #5a4724;border-radius:10px;padding:10px 14px;transition:.2s}
+button:hover{border-color:var(--gold);background:#35291a}
+button:disabled{cursor:default}
+.slots{display:grid;gap:8px;margin-bottom:12px}
+.slot{min-height:44px;border:2px dashed #5a4724;border-radius:10px;padding:8px 12px;color:var(--mut)}
+.slot.f{border-style:solid;border-color:var(--gold);color:var(--tx)}
+.cards{display:flex;flex-wrap:wrap;gap:8px}
+.fb{min-height:24px;margin-top:10px;font-weight:bold}
+.ok{color:var(--ok)}.bad{color:var(--bad)}
+.opts{display:grid;gap:8px}
+.opts button{text-align:left}
+.opts button.ok{border-color:var(--ok)}
+.opts button.bad{border-color:var(--bad)}
+.code{display:none;margin:12px 0;padding:12px;border:1px solid var(--gold);border-radius:10px;text-align:center}
+.code b{font-size:2rem;letter-spacing:.4em;color:var(--gold2)}
+.lockrow{display:flex;gap:8px;margin-top:8px}
+input{font:inherit;font-size:1.4rem;letter-spacing:.3em;width:140px;text-align:center;background:#0d0b09;color:var(--gold2);border:1px solid var(--gold);border-radius:10px;padding:8px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cols button{width:100%;margin-bottom:8px;min-height:52px}
+.sel{border-color:var(--gold2)!important;background:#4a3a1c!important}
+.matched{border-color:var(--ok)!important;color:var(--ok)}
+.shake{animation:sh .35s}
+@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+#win{display:none;text-align:center;background:linear-gradient(#2a2010,#1a1612);border:2px solid var(--gold);border-radius:16px;padding:28px 18px}
+#win .hug{font-size:4rem}
+#win h2{color:var(--gold2);font-size:1.6rem;margin:6px 0}
+#win blockquote{font-style:italic;font-size:1.1rem;margin:14px 0;color:var(--tx)}
+#win .ref{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="w">
+<h1>Hazatérés az Atya házába</h1>
+<p class="sub">A Tékozló fiú szabadulószobája · Lukács 15,11–32</p>
+<div class="bar"><i id="pb"></i></div>
+<div class="lbl"><span id="pl">0 / 3 állomás</span><span>Szabadulj ki! 🗝️</span></div>
+
+<section class="st" id="s1">
+<h2>1. állomás – A távoli vidék mélypontja</h2>
+<p>Rakd helyes sorrendbe a fiatalabb fiú életének állomásait! Koppints a kártyákra a történet sorrendjében.</p>
+<div class="slots" id="slots1"></div>
+<div class="cards" id="cards1"></div>
+<div class="fb" id="fb1"></div>
+<button id="rs1" style="margin-top:8px">↺ Újrakezdés</button>
+</section>
+
+<section class="st lock" id="s2">
+<h2>2. állomás – A bűnbánat kulcsa</h2>
+<p>Heidelbergi Káté, 88. kérdés: <i>Miből áll az igaz megtérés?</i> Válaszd ki a helyes választ, így megkapod a kapu 4 jegyű kódját!</p>
+<div class="opts" id="opts2"></div>
+<div class="code" id="code2">A kapu kódja: <b id="codeV"></b></div>
+<div class="lockrow"><input id="inp" maxlength="4" inputmode="numeric" placeholder="----"><button id="go">Kapu megnyitása</button></div>
+<div class="fb" id="fb2"></div>
+</section>
+
+<section class="st lock" id="s3">
+<h2>3. állomás – Az Atya kapuja</h2>
+<p>Párosítsd az Apa három ajándékát a jelentésükkel! Koppints egy ajándékra, majd a hozzá tartozó jelentésre.</p>
+<div class="cols"><div id="gifts"></div><div id="means"></div></div>
+<div class="fb" id="fb3"></div>
+</section>
+
+<section id="win">
+<div class="hug">🤗</div>
+<h2>Hazaértél! Az Atya ölelésében vagy!</h2>
+<blockquote>„Mert ez az én fiam meghalt vala, és feltámadott; elveszett vala, és megtaláltatott.”</blockquote>
+<div class="ref">Lukács 15,24</div>
+<p>Az Atya nem a múltadat nézi, hanem téged vár. Szabad vagy! 🔓</p>
+<button onclick="location.reload()">Játék újra</button>
+</section>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let done=0;
+function prog(){done++;$('pb').style.width=(done/3*100)+'%';$('pl').textContent=done+' / 3 állomás'}
+function open_(a,b){$(a).classList.add('done');if(b){$(b).classList.remove('lock');$(b).scrollIntoView({behavior:'smooth',block:'center'})}}
+function shuf(a){return a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1])}
+function shake(el){el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')}
+
+/* 1. állomás */
+const steps=['Kikéri az örökséget','Pénzszórás és dőzsölés','Éhínség és disznók legeltetése','Magába szállás'];
+let pick=[];
+function draw1(){
+  $('slots1').innerHTML=steps.map((_,i)=>`<div class="slot ${pick[i]?'f':''}">${i+1}. ${pick[i]||'…'}</div>`).join('');
+  $('cards1').innerHTML=shuf(steps).filter(s=>!pick.includes(s)).map(s=>`<button>${s}</button>`).join('');
+  [...$('cards1').children].forEach(b=>b.onclick=()=>{
+    pick.push(b.textContent);draw1();
+    if(pick.length==4){
+      if(pick.every((p,i)=>p==steps[i])){
+        $('fb1').innerHTML='<span class="ok">✔ Helyes! A fiú a mélyponton jött észhez – megnyílt a 2. állomás!</span>';
+        $('cards1').innerHTML='';$('rs1').style.display='none';prog();open_('s1','s2');
+      }else{
+        $('fb1').innerHTML='<span class="bad">✘ Nem ez a sorrend, próbáld újra!</span>';
+        shake($('slots1'));setTimeout(()=>{pick=[];draw1()},900);
+      }
+    }
+  });
+}
+$('rs1').onclick=()=>{pick=[];$('fb1').textContent='';draw1()};
+draw1();
+
+/* 2. állomás */
+const ans=[
+ ['Csak sírni és szomorkodni a bűneink miatt','2024'],
+ ['A vén ember meghalása és az új ember feléledése','1563'],
+ ['Külső vezeklés és zarándoklat, hogy Isten megkegyelmezzen','1054'],
+ ['Elég jócselekedetet gyűjteni, hogy megvásároljuk a bűnbocsánatot','1517']
+];
+$('opts2').innerHTML=ans.map((a,i)=>`<button data-i="${i}">${'ABCD'[i]}) ${a[0]}</button>`).join('');
+[...$('opts2').children].forEach(b=>b.onclick=()=>{
+  const a=ans[b.dataset.i];
+  [...$('opts2').children].forEach(x=>x.classList.remove('ok','bad'));
+  b.classList.add(a[1]=='1563'?'ok':'bad');
+  $('codeV').textContent=a[1];$('code2').style.display='block';
+  $('fb2').innerHTML=a[1]=='1563'
+   ?'<span class="ok">Ez a Káté tanítása: a szív megtérése a régi én halála és az új élet feléledése. A kód a Káté keletkezési éve!</span>'
+   :'<span class="bad">Ez a kód lehet, hogy nem nyitja a kaput… Gondold át a választ!</span>';
+});
+$('go').onclick=()=>{
+  if($('inp').value=='1563'){
+    $('fb2').innerHTML='<span class="ok">✔ Kattan a zár! Megnyílt az Atya kapuja!</span>';
+    $('go').disabled=true;$('inp').disabled=true;prog();open_('s2','s3');
+  }else{$('fb2').innerHTML='<span class="bad">✘ A zár nem enged. Próbálj másik választ!</span>';shake($('inp'))}
+};
+
+/* 3. állomás */
+const pairs=[['👘 A legszebb ruha','Megbocsátott tisztaság'],['💍 A gyűrű','Helyreállított fiúsági méltóság'],['👟 A saru','Szabad emberi státusz']];
+let sel=null,got=0;
+$('gifts').innerHTML=pairs.map((p,i)=>`<button data-i="${i}">${p[0]}</button>`).join('');
+$('means').innerHTML=shuf(pairs.map((p,i)=>[p[1],i])).map(m=>`<button data-i="${m[1]}">${m[0]}</button>`).join('');
+[...$('gifts').children].forEach(b=>b.onclick=()=>{
+  if(b.classList.contains('matched'))return;
+  [...$('gifts').children].forEach(x=>x.classList.remove('sel'));
+  b.classList.add('sel');sel=b;
+});
+[...$('means').children].forEach(b=>b.onclick=()=>{
+  if(!sel||b.classList.contains('matched'))return;
+  if(sel.dataset.i==b.dataset.i){
+    sel.classList.remove('sel');sel.classList.add('matched');b.classList.add('matched');
+    sel=null;$('fb3').innerHTML='<span class="ok">✔ Jó párosítás!</span>';
+    if(++got==3){prog();$('s3').classList.add('done');setTimeout(()=>{$('win').style.display='block';$('win').scrollIntoView({behavior:'smooth'})},700)}
+  }else{$('fb3').innerHTML='<span class="bad">✘ Ez nem illik össze, próbáld újra!</span>';shake(b)}
+});
+</script>
+</body>
+</html>
